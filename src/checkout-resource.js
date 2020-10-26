@@ -17,7 +17,7 @@ import checkoutGiftCardsAppendMutation from './graphql/checkoutGiftCardsAppendMu
 import checkoutGiftCardRemoveV2Mutation from './graphql/checkoutGiftCardRemoveV2Mutation.graphql';
 import checkoutEmailUpdateV2Mutation from './graphql/checkoutEmailUpdateV2Mutation.graphql';
 import checkoutShippingAddressUpdateV2Mutation from './graphql/checkoutShippingAddressUpdateV2Mutation.graphql';
-
+import checkoutCompleteWithTokenizedPaymentV3Mutation from './graphql/checkoutCompleteWithTokenizedPaymentV3Mutation.graphql'
 /**
  * The JS Buy SDK checkout resource
  * @class
@@ -347,6 +347,12 @@ class CheckoutResource extends Resource {
     return this.graphQLClient
       .send(checkoutShippingLineUpdateMutation, {checkoutId, shippingRateHandle})
       .then(handleCheckoutMutation('checkoutShippingLineUpdate', this.graphQLClient));
+  }
+
+  completeCheckoutPayment(checkoutId, payment) {
+    return this.graphQLClient
+      .send(checkoutCompleteWithTokenizedPaymentV3Mutation, {checkoutId, payment})
+      .then(handleCheckoutMutation('checkoutCompleteWithTokenizedPaymentV3', this.graphQLClient))
   }
 }
 

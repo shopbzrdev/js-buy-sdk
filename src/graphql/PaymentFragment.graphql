@@ -1,0 +1,23 @@
+fragment PaymentFragment on Payment {
+  id
+  idempotencyKey
+  amountV2 {
+    amount
+    currencyCode
+  }
+  test
+  billingAddress {
+    ...MailingAddressFragment
+  }
+  errorMessage
+  ready
+  transaction {
+    amountV2 {
+      amount
+      currencyCode
+    }
+    kind
+    statusV2
+    test
+  }
+}

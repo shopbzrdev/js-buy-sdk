@@ -29,6 +29,7 @@ import checkoutGiftCardRemoveV2Fixture from '../fixtures/checkout-gift-card-remo
 import checkoutShippingAddressUpdateV2Fixture from '../fixtures/checkout-shipping-address-update-v2-fixture';
 import checkoutShippingAdddressUpdateV2WithUserErrorsFixture from '../fixtures/checkout-shipping-address-update-v2-with-user-errors-fixture';
 import checkoutShippingLineUpdateFixture from '../fixtures/checkout-shipping-line-update-fixture';
+import checkoutCompleteWithTokenizedPaymentV3Fixture from '../fixtures/checkout-complete-with-tokenized-payment-v3-fixture';
 
 suite('client-checkout-integration-test', () => {
   const domain = 'client-integration-tests.myshopify.io';
@@ -505,6 +506,37 @@ suite('client-checkout-integration-test', () => {
       assert.ok(fetchMock.done());
     });
   });
+
+  test('it resolves with a checkout and a representation of the attempted payment on Client.checkout#completeCheckoutPayment', () => {
+    const { id: checkoutId, shippingAddress } = checkoutCompleteWithTokenizedPaymentV3Fixture.data.checkoutCompleteWithTokenizedPaymentV3.checkout;
+
+    const paymentAttempt = {
+      "paymentAmount": {
+        "amount": "80.28",
+        "currencyCode": "CAD"
+      },
+      "idempotencyKey": "pi_1Hf9SSJNb4qxRlb3FTNq03tx",
+      "billingAddress": shippingAddress,
+      "test": true,
+      "paymentData": "tok_1Hf9SeJNb4qxRlb3cM0IZaDu",
+      "type": "SHOPIFY_PAY"
+    }
+
+    fetchMockPostOnce(fetchMock, apiUrl, checkoutCompleteWithTokenizedPaymentV3Fixture);
+    return client.checkout.completeCheckoutPayment(checkoutId, paymentAttempt).then((checkout) => {
+      const { payment } = checkout
+
+      assert.equal(checkout.id, checkoutId);
+      assert.notEqual(payment.id, '');
+      assert.equal(payment.idempotencyKey, paymentAttempt.idempotencyKey);
+      assert.equal(payment.amountV2.amount, paymentAttempt.paymentAmount.amount);
+      assert.equal(payment.amountV2.currencyCode, paymentAttempt.paymentAmount.currencyCode);
+      assert.equal(payment.billingAddress.id, paymentAttempt.billingAddress.id);
+      assert.equal(payment.billingAddress.firstName, paymentAttempt.billingAddress.firstName);
+      assert.equal(payment.billingAddress.lastName, paymentAttempt.billingAddress.lastName);
+      assert.ok(fetchMock.done());
+    })
+  })
 
   test('it fetches all paginated line items on the checkout on any checkout mutation', () => {
     const input = {
