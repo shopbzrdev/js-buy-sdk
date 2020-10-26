@@ -17,7 +17,8 @@ import checkoutGiftCardsAppendMutation from './graphql/checkoutGiftCardsAppendMu
 import checkoutGiftCardRemoveV2Mutation from './graphql/checkoutGiftCardRemoveV2Mutation.graphql';
 import checkoutEmailUpdateV2Mutation from './graphql/checkoutEmailUpdateV2Mutation.graphql';
 import checkoutShippingAddressUpdateV2Mutation from './graphql/checkoutShippingAddressUpdateV2Mutation.graphql';
-import checkoutCompleteWithTokenizedPaymentV3Mutation from './graphql/checkoutCompleteWithTokenizedPaymentV3Mutation.graphql'
+import checkoutCompleteWithTokenizedPaymentV3Mutation from './graphql/checkoutCompleteWithTokenizedPaymentV3Mutation.graphql';
+
 /**
  * The JS Buy SDK checkout resource
  * @class
@@ -349,10 +350,34 @@ class CheckoutResource extends Resource {
       .then(handleCheckoutMutation('checkoutShippingLineUpdate', this.graphQLClient));
   }
 
+  /**
+   * Completes a checkout with a tokenized payment.
+   *
+   * @example
+   * const checkoutId = 'Z2lkOi8vc2hvcGlmeS9DaGVja291dC9kMTZmM2EzMDM4Yjc4N=';
+   * const payment = {
+   * "paymentAmount": {
+   *     "amount": "placeholder",
+   *     "currencyCode": "placeholder"
+   *   },
+   *   "idempotencyKey": "placeholder",
+   *   "billingAddress": {},
+   *   "paymentData": "placeholder",
+   *   "type": "placeholder"
+   # };
+   *
+   * client.checkout.completeCheckoutPayment(checkoutId, payment).then(checkout => {
+   *   // Do something with the updated checkout
+   * });
+   *
+   * @param  {String} checkoutId The ID of the checkout.
+   * @param  {Object} payment The information to apply as a tokenized payment.
+   * @return {Promise|GraphModel} A promise resolving with the updated checkout and attempted payment.
+   */
   completeCheckoutPayment(checkoutId, payment) {
     return this.graphQLClient
       .send(checkoutCompleteWithTokenizedPaymentV3Mutation, {checkoutId, payment})
-      .then(handleCheckoutMutation('checkoutCompleteWithTokenizedPaymentV3', this.graphQLClient))
+      .then(handleCheckoutMutation('checkoutCompleteWithTokenizedPaymentV3', this.graphQLClient));
   }
 }
 

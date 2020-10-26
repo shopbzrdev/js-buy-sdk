@@ -10,7 +10,7 @@ export default function handleCheckoutMutation(mutationRootKey, client) {
         rootModel.checkout.userErrors = rootModel.userErrors;
 
         if (mutationRootKey === 'checkoutCompleteWithTokenizedPaymentV3') {
-          rootModel.checkout.payment = rootModel.payment
+          rootModel.checkout.payment = rootModel.payment;
         }
 
         return rootModel.checkout;
