@@ -8,6 +8,7 @@ export default function handleCheckoutMutation(mutationRootKey, client) {
         rootModel.checkout.attrs.lineItems = lineItems;
         rootModel.checkout.errors = errors;
         rootModel.checkout.userErrors = rootModel.userErrors;
+        rootModel.checkout.checkoutUserErrors = rootModel.checkoutUserErrors;
 
         if (mutationRootKey === 'checkoutCompleteWithTokenizedPaymentV3') {
           rootModel.checkout.payment = rootModel.payment;
