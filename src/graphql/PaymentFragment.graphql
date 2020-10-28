@@ -20,4 +20,7 @@ fragment PaymentFragment on Payment {
     statusV2
     test
   }
+  chekcout {
+    ...CheckoutFragment
+  }
 }
