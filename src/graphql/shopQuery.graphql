@@ -3,6 +3,7 @@ query {
     currencyCode
     paymentSettings {
       enabledPresentmentCurrencies
+      shopifyPaymentsAccountId
     }
     description
     moneyFormat
